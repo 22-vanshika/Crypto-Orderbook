@@ -6,6 +6,9 @@ import { Toaster } from "react-hot-toast";
 export const metadata = {
   title: "Real-Time Orderbook Viewer",
   description: "Simulate and visualize crypto orders in real-time.",
+  icons: {
+    icon: '/favicon.png', 
+  },
 };
 
 export default function RootLayout({
@@ -30,7 +33,7 @@ export default function RootLayout({
           <Vortex
             backgroundColor="black"
             rangeY={800}
-            particleCount={15}
+            particleCount={20}
             baseHue={60}
             containerClassName="fixed inset-0 w-full h-full z-0"
             className="w-full h-full"
