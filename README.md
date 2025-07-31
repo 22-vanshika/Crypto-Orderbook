@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## Overview
+This is a Next.js application that displays real-time orderbooks from OKX, Bybit, and Deribit, with features to simulate orders and visualize their market impact. It includes a dynamic landing page, responsive design, and bonus elements like market depth charts and slippage warnings. Built to meet the assignment requirements for simulating trades safely and educationally.
 
-First, run the development server:
+## Features
+- Real-time orderbook display with at least 15 levels of best bids/asks per venue.
+- Order simulation form with validation, types (Market/Limit), sides, price, quantity, and delays.
+- Visualization of where simulated orders fit in the orderbook, with highlights.
+- Impact metrics: fill percentage, slippage estimation, market impact, and warnings.
+- Bonus: Market depth chart, imbalance indicators, and responsive UI.
+- Live updates via WebSockets with error handling and fallbacks.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## How to Run Locally
+1. **Clone the Repository**:  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install Dependencies**:  
+   Navigate to the project folder and run:  
+   `npm install`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Set Up Environment Variables**:  
+   Create a `.env.local` file in the root and add these (get values from exchange docs):  
+-`NEXT_PUBLIC_OKX_WSS_URL="wss://ws.okx.com/ws/v5/public"`
+-`NEXT_PUBLIC_BYBIT_WSS_URL="wss://stream.bybit.com/v5/public/spot"`
+-`NEXT_PUBLIC_DERIBIT_WSS_URL="wss://www.deribit.com/ws/api/v2"`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+4. **Start the App**:  
+   Run `npm run dev`. Open http://localhost:3000 in your browser.  
+   - The app will connect to exchanges automatically. If data doesn't load, check your internet or env vars.
 
-To learn more about Next.js, take a look at the following resources:
+5. **Build for Production**:  
+   Run `npm run build` then `npm start` for a production preview.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Note: Requires Node.js v18+ and a stable internet connection for API/WebSocket access.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Assumptions Made
+- Focused on free/public API endpoints to avoid costs or authentication (e.g., no private keys needed for demo).
+- Assumed spot trading pairs (e.g., BTC-USDT) for simplicity; the app can be extended for futures.
+- Handled edge cases like no data (shows placeholders) or disconnections (status indicators and fallbacks to hardcoded lists).
+- Rate limiting is managed with delays (e.g., 1-2 seconds between fetches) and error retries, assuming standard limits (e.g., Bybit: 10 req/sec).
+- Mobile responsiveness prioritizes hiding non-essential elements (e.g., labels) while keeping core functions usable.
 
-## Deploy on Vercel
+## Libraries Used
+- **Next.js**: Framework for building the app with server-side rendering and API routes.
+- **Framer Motion**: For animations like the landing scroll effect and fade-ins.
+- **Recharts**: Charting library for the market depth visualization.
+- **Zustand**: Lightweight state management for stores (e.g., orderbook data, simulations).
+- **Aceternity UI**: For visual components like container scroll animation, glowing effects, and Vortex background.
+- **Lucide React**: Icon library for UI elements (e.g., info icons, arrows).
+- **React Hot Toast**: For user notifications (e.g., order submitted).
+- **Tailwind CSS**: Styling with responsive utilities and dark theme.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Documentation References and Rate Limiting
+- **OKX API**: [OKX Docs](https://www.okx.com/docs-v5/) – Used public WebSocket for orderbooks (wss://ws.okx.com:8443/ws/v5/public) and REST for instruments. Rate limit: 10 req/sec; handled with throttling in code.
+- **Bybit API**: [Bybit Docs](https://bybit-exchange.github.io/docs/v5/intro) – Public WebSocket (wss://stream.bybit.com/v5/public/spot) and REST for data. Rate limit: 10 req/sec per IP; added retries and fallbacks for overload.
+- **Deribit API**: [Deribit Docs](https://docs.deribit.com/) – Public WebSocket (wss://www.deribit.com/ws/api/v2) and REST endpoints. Rate limit: 20 req/sec; code includes delays to stay under limits.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For full details on error handling (e.g., API failures trigger UI warnings), see the services folder in the code.
+
+## Deployment
+Deployed on Vercel: (https://crypto-orderbook-sand.vercel.app/). Environment variables are set in Vercel dashboard for production.
+
+If you encounter issues, check the console for logs or contact me.
