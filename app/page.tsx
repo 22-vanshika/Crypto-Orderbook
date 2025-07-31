@@ -1,103 +1,138 @@
-import Image from "next/image";
 
-export default function Home() {
+"use client";
+
+import { useEffect, useRef } from "react"; 
+import { Sparkles, Lock, Settings, BarChart3,  Info } from "lucide-react"; 
+import { GlowingEffect } from "@/components/ui/glowing-effect";
+import OrderBookChart from "@/modules/OrderBookChart";
+import { useExchangeStore } from "@/stores/exchangeStore";
+import WebSocketManager from "@/services/WebSocketManager";
+import type { Venue } from "@/types/domain";
+import OrderImpactMetrics from "@/modules/OrderImpactMetrics";
+import OrderSimulationForm from "@/modules/OrderSimulationForm";
+import OrderHistory from "@/modules/OrderHistory";
+import DepthChart from "@/modules/DepthChart";
+import { ContainerScroll } from "@/components/ui/ContainerScroll";
+import { motion, useInView } from "framer-motion";
+
+export default function HomePage() {
+  const { activeExchange, selectedPair } = useExchangeStore();
+  useEffect(() => {
+    // If we have a venue and a symbol, tell the manager to connect
+    if (activeExchange && selectedPair) {
+      WebSocketManager.connect(activeExchange as Venue, selectedPair);
+    }
+    return () => {
+      WebSocketManager.disconnect();
+    };
+  }, [activeExchange, selectedPair]);
+
+
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(contentRef, { once: true, amount: 0.2 }); 
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-neutral-900 text-white">
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <ContainerScroll
+        titleComponent={
+          <div className="text-center">
+            <p className="mt-4 text-2xl text-neutral-400">Scroll to simulate and visualize real-time crypto orders.</p>
+            <h1 className="text-4xl font-bold md:text-8xl text-white/80 mb-6">Welcome to GoQuant</h1>
+          </div>
+        }
+      >
+        {/* Content inside the animated card (e.g., a teaser or mockup) */}
+        <div className="h-full w-full flex items-center justify-center text-neutral-300">
+          {/* Example: Add an image, video, or simple text teaser */}
+          <img src="/teaser.png" alt="App Teaser" className="max-h-full rounded-lg" /> {/* Replace with your asset */}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </ContainerScroll>
+
+
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 h-full p-4">
+        {/* --- LEFT COLUMN (Visualizations) --- */}
+        <div className="flex flex-col">
+          <GridItem
+            icon={<BarChart3 className="h-5 w-5 text-neutral-400" />}
+            title="Multi-Venue Orderbook"
+            description={
+              <div className="flex flex-col h-full">
+                <div className="flex-grow">
+                  <OrderBookChart />
+                </div>
+                <div className="h-[40vh] lg:h-1/2 border-t border-neutral-800 flex flex-col">
+                  <h3 className="text-lg font-semibold text-neutral-300 px-4 pt-12 pb-4 text-center">
+                    Market Depth
+                  </h3>
+                  <div className="flex-grow">
+                    <DepthChart />
+                  </div>
+                </div>
+              </div>
+            }
+            infoDescription="This area shows live buy and sell offers from different trading platforms, like a price list in a marketplace. It displays up to 15 top offers with activity bars and stats like price gaps and balance. Below, a chart stacks offers to show market depth, updating in real time."
+
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        </div>
+
+        {/* --- RIGHT COLUMN (Interaction & History) --- */}
+        <div className="flex flex-col gap-8">
+          <GridItem
+            icon={<Settings className="h-5 w-5 text-neutral-400" />}
+            title="Order Simulation"
+            description={<OrderSimulationForm />}
+            infoDescription="This form lets you simulate buy or sell orders, choosing type (limit or market), side, price, amount, and delay. It previews results, saves them, and shows a quick note , great for practicing trades safely."
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+          <GridItem
+            icon={<Lock className="h-5 w-5 text-neutral-400" />}
+            title="Order Impact Analysis"
+            description={<OrderImpactMetrics />}
+            infoDescription="Get a simple check on how your simulated order might affect prices, including slippage, fill rate, average cost, and risk warnings based on current market data."
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <GridItem
+            icon={<Sparkles className="h-5 w-5 text-neutral-400" />}
+            title="Order History"
+            description={<OrderHistory />}
+            infoDescription="A table of your pretend trades, listing time, item, buy/sell, price, and amount. Shows 6 at a time with buttons for older ones, for easy review."
+          />
+        </div>
+      </div>
     </div>
   );
 }
+
+interface GridItemProps {
+  icon: React.ReactNode;
+  title: string;
+  description: React.ReactNode;
+  infoDescription: string; 
+}
+
+const GridItem = ({ icon, title, description, infoDescription }: GridItemProps) => {
+  return (
+    <div className="h-full">
+      <div className="relative h-full rounded-2xl p-2 md:rounded-3xl md:p-3">
+        <GlowingEffect blur={1} borderWidth={3} spread={80} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
+        <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
+    
+          <div className="absolute top-4 right-4 z-20 group"> 
+            <Info className="w-4 h-4 text-neutral-400 hover:text-neutral-200 cursor-help" />
+            <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-neutral-800 border border-neutral-700 rounded-lg shadow-lg text-xs text-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+              {infoDescription}
+            </div>
+          </div>
+
+          <div className="relative flex flex-1 flex-col justify-between gap-3">
+            <div className="flex gap-3 justify-center items-center">
+              <div className="w-fit rounded-lg border border-gray-100 p-1.5">{icon}</div>
+              <h3 className="pt-0.5 font-sans text-md font-semibold dark:text-white">{title}</h3>
+            </div>
+            <div className="flex-1 mt-4">{description}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
