@@ -88,7 +88,7 @@ export default function OrderSimulationForm() {
   const currentPairList = pairLists[activeExchange.toLowerCase() as keyof typeof pairLists] || [];
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-1 text-sm">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-1 text-xs md:text-sm">
       <div className="grid grid-cols-2 gap-3">
         <SideButton active={side === 'Buy'} onClick={() => setSide('Buy')} type="Buy" />
         <SideButton active={side === 'Sell'} onClick={() => setSide('Sell')} type="Sell" />
@@ -133,7 +133,7 @@ export default function OrderSimulationForm() {
       <FormRow icon={<Clock size={16} />} label="Timing">
         <div className="flex space-x-2 w-[60%] overflow-y-auto no-scrollbar" >
           {[0, 5, 10, 30].map(sec => (
-            <button type="button" key={sec} onClick={() => setDelay(sec * 1000)} className={`flex-1 p-2 rounded-md transition-all text-xs border ${delay === sec * 1000 ? 'bg-cyan-400/20 border-cyan-400/70 text-cyan-300 font-semibold' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}>
+            <button type="button" key={sec} onClick={() => setDelay(sec * 1000)} className={`flex-1 p-2 rounded-md transition-all text-tiny md:text-xs border ${delay === sec * 1000 ? 'bg-cyan-400/20 border-cyan-400/70 text-cyan-300 font-semibold' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}>
               {sec === 0 ? 'Now' : `${sec}s`}
             </button>
           ))}

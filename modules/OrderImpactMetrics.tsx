@@ -72,7 +72,7 @@ export default function OrderImpactMetrics() {
     const showCalculatedValues = pendingOrder && pendingOrder.quantity && pendingOrder.quantity > 0;
     const isHighSlippage = showCalculatedValues && metrics.slippage > SLIPPAGE_WARNING_THRESHOLD;
     return (
-        <div className="space-y-3 text-sm h-full flex flex-col justify-around">
+        <div className="space-y-3 text-xs md:text-sm h-full flex flex-col justify-around">
             <MetricRow
                 label="Est. Fillable"
                 value={showCalculatedValues ? `${metrics.fillPercent.toFixed(2)}%` : '-- %'}

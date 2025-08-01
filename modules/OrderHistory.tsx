@@ -32,7 +32,7 @@ export default function OrderHistory() {
     <div className="rounded-xl border border-neutral-700 bg-neutral-900/20 shadow-md overflow-hidden flex flex-col h-full">
      
       <div className="overflow-auto flex-grow">
-        <table className="w-full text-xs text-neutral-300">
+        <table className="w-full text-xs md:text-sm text-neutral-300">
           <thead>
             <tr className="border-b border-neutral-800 text-neutral-500">
               <th className="py-2 px-3 text-left">Time</th>
@@ -100,7 +100,7 @@ export default function OrderHistory() {
         </table>
       </div>
       {totalPages > 1 && (
-        <div className="px-3 py-2 border-t border-neutral-800 flex justify-between items-center text-xs text-neutral-400">
+        <div className="px-3 py-2 border-t border-neutral-800 flex justify-between items-center text-xs md:text-sm text-neutral-400">
           <button
             onClick={goToPrevious}
             disabled={currentPage === 0}

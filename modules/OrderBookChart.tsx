@@ -133,7 +133,7 @@ export default function OrderBookChart() {
         return (
               <div 
             key={index} 
-            className={`h-7 relative grid grid-cols-2 items-center px-3 text-xs transition-colors duration-150 hover:bg-neutral-700/50 
+            className={`h-7 relative grid grid-cols-2 items-center px-3 text-tiny md:text-xs transition-colors duration-150 hover:bg-neutral-700/50 
               ${isPendingOrderLevel ? 'ring-1 ring-cyan-400/80 bg-cyan-500/10' : ''}
               ${isMarketAffected ? 'bg-cyan-500/10 ring-1 ring-cyan-400/80' : ''}`}
           >
@@ -170,10 +170,10 @@ export default function OrderBookChart() {
         </div>
       </div>
       <div className="grid grid-cols-2 text-xs font-semibold text-neutral-400 text-center border-b border-neutral-800">
-        <div className="py-1 px-3 text-center text-red-400">Asks(Price/Size)</div>
-        <div className="py-1 px-3 text-center text-green-400">Bids(Price/Size)</div>
+        <div className="py-1 px-3 text-center text-red-400">Asks <span className="text-tiny md:text-xs">(Price/Size)</span></div>
+        <div className="py-1 px-3 text-center text-green-400">Bids <span className="text-tiny md:text-xs">(Price/Size)</span></div>
       </div>
-      <div className="grid grid-cols-2 divide-x divide-neutral-800 flex-grow min-h-0 text-tiny md:text-sm" >
+      <div className="grid grid-cols-2 divide-x divide-neutral-800 flex-grow min-h-0 text-tiny md:text-xs" >
         <div className="overflow-y-hidden ">
           {renderLevels(selectedData.asks || [], "text-red-400", "asks")}
         </div>

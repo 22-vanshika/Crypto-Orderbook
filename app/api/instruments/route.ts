@@ -1,5 +1,3 @@
-// File: app/api/instruments/route.ts
-
 import { NextResponse } from 'next/server';
 import type { Venue } from '@/types/domain';
 
@@ -24,7 +22,7 @@ export async function GET(request: Request) {
     let instrumentNames: string[] = [];
     switch (venue) {
       case 'OKX':
-        const okxResponse = await fetch(REST_APIS.OKX);
+        const okxResponse = await fetch(REST_APIS.OKX, { mode: 'cors' });
         const okxData = await okxResponse.json();
         if (okxData.code === '0' && okxData.data) {
           instrumentNames = okxData.data
@@ -57,7 +55,7 @@ export async function GET(request: Request) {
     }
     return NextResponse.json(instrumentNames);
   } catch (error: any) {
-    console.error(`[API Route] Failed to fetch ${venue} instruments:`, error.message);
+    console.error(`[API Route] Failed to fetch ${venue} instruments:`, error);
     return NextResponse.json({ error: `Failed to fetch instruments for ${venue}` }, { status: 500 });
   }
 }
