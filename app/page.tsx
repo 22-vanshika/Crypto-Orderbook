@@ -14,6 +14,7 @@ import OrderHistory from "@/modules/OrderHistory";
 import DepthChart from "@/modules/DepthChart";
 import { ContainerScroll } from "@/components/ui/ContainerScroll";
 import { motion, useInView } from "framer-motion";
+import { InfoTooltip } from "@/components/ui/InfoTooltip";
 
 export default function HomePage() {
   const { activeExchange, selectedPair } = useExchangeStore();
@@ -95,7 +96,7 @@ export default function HomePage() {
             icon={<Sparkles className="h-5 w-5 text-neutral-400" />}
             title="Order History"
             description={<OrderHistory />}
-            infoDescription="A table of your pretend trades, listing time, item, buy/sell, price, and amount. Shows 6 at a time with buttons for older ones, for easy review."
+            infoDescription="A table of your pretend trades, listing time, item, buy/sell, price, and amount. Shows 5 at a time with buttons for older ones, for easy review."
           />
         </div>
       </div>
@@ -116,12 +117,9 @@ const GridItem = ({ icon, title, description, infoDescription }: GridItemProps) 
       <div className="relative h-full rounded-2xl p-2 md:rounded-3xl md:p-3">
         <GlowingEffect blur={1} borderWidth={3} spread={80} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
         <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
-    
-          <div className="absolute top-4 right-4 z-20 group"> 
-            <Info className="w-4 h-4 text-neutral-400 hover:text-neutral-200 cursor-help" />
-            <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-neutral-800 border border-neutral-700 rounded-lg shadow-lg text-xs text-neutral-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
-              {infoDescription}
-            </div>
+        
+          <div className="absolute top-4 right-4 z-20"> 
+            <InfoTooltip description={infoDescription} /> 
           </div>
 
           <div className="relative flex flex-1 flex-col justify-between gap-3">
