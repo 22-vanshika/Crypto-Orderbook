@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 import type { Venue } from '@/types/domain';
 
 const REST_APIS = {
-  OKX: 'https://www.okx.com/api/v5/public/instruments?instType=SPOT',
-  Bybit: 'https://api.bybit.com/v5/market/instruments-info?category=spot',
+  // Uses env var with fallback
+  OKX: process.env.NEXT_PUBLIC_OKX_REST_API || 'https://www.okx.com/api/v5/public/instruments?instType=SPOT', 
+  Bybit: process.env.NEXT_PUBLIC_BYBIT_REST_API || 'https://api.bybit.com/v5/market/instruments-info?category=spot',
   Deribit: {
-    BTC: 'https://www.deribit.com/api/v2/public/get_instruments?currency=BTC&kind=future&expired=false',
-    ETH: 'https://www.deribit.com/api/v2/public/get_instruments?currency=ETH&kind=future&expired=false'
+    BTC: process.env.NEXT_PUBLIC_DERIBIT_BTC_REST_API || 'https://www.deribit.com/api/v2/public/get_instruments?currency=BTC&kind=future&expired=false', 
+    ETH: process.env.NEXT_PUBLIC_DERIBIT_ETH_REST_API || 'https://www.deribit.com/api/v2/public/get_instruments?currency=ETH&kind=future&expired=false' 
   }
 };
 
