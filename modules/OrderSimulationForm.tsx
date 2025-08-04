@@ -127,12 +127,12 @@ export default function OrderSimulationForm() {
 
 
         <FormRow icon={<CircleDollarSign size={16} />} label="Price">
-          <input type="number" placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} disabled={orderType === 'Market'} className="form-input w-[60%] text-right disabled:bg-neutral-800/50 disabled:cursor-not-allowed" />
+          <input type="number" placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} disabled={orderType === 'Market'} className="form-input w-[60%] text-left disabled:bg-neutral-800/50 disabled:cursor-not-allowed" />
         </FormRow>
       </div>
 
       <FormRow icon={<Package size={16} />} label="Quantity">
-        <input type="number" placeholder="0.0000" value={quantity} onChange={(e) => setQuantity(e.target.value)} required className="form-input w-[60%] text-right" />
+        <input type="number" placeholder="0.0000" value={quantity} onChange={(e) => setQuantity(e.target.value)} required className="form-input w-[60%] text-left" />
       </FormRow>
 
       <FormRow icon={<Clock size={16} />} label="Timing">

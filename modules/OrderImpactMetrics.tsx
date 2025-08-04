@@ -70,7 +70,7 @@ export default function OrderImpactMetrics() {
 
 
     // This check determines whether to show the calculated values or the default placeholders.
-    const showCalculatedValues = pendingOrder && pendingOrder.quantity && pendingOrder.quantity > 0;
+    const showCalculatedValues = !!(pendingOrder && pendingOrder.quantity && pendingOrder.quantity > 0);
     const isHighSlippage = showCalculatedValues && metrics.slippage > SLIPPAGE_WARNING_THRESHOLD;
 
     // --- Generate a comment based on the metrics ---
@@ -131,14 +131,12 @@ export default function OrderImpactMetrics() {
                 </div>
 
 
-                {showCalculatedValues && metrics.fillPercent < 100 && (
+                {showCalculatedValues && metrics.fillPercent < 100 ? (
                     <div className="p-2 text-xs text-neutral-500 flex items-start gap-2">
                         <Info size={16} className="flex-shrink-0 mt-0.5" />
-                        <p>
-                            Note: Analysis is limited to the top 15 visible price levels. The actual impact may be greater.
-                        </p>
+                        <p>Note: Analysis is limited to the top 15 visible price levels. The actual impact may be greater.</p>
                     </div>
-                )}
+                ) : null}
             </div>
         </div>
     );
