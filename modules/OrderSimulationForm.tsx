@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useExchangeStore } from "@/stores/exchangeStore";
-import { useSimulationStore } from "@/stores/simulationStore"; 
+import { useSimulationStore } from "@/stores/simulationStore";
 import { useOrderHistoryStore } from "@/stores/orderHistoryStore";
 import type { SimulatedOrder } from "@/types/domain";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 import {
   ArrowRightLeft,
   ChevronsUpDown,
@@ -27,16 +27,16 @@ export default function OrderSimulationForm() {
     isLoadingPairs,
     setActiveExchange,
     setSelectedPair,
-    fetchPairsForActiveExchange, 
+    fetchPairsForActiveExchange,
   } = useExchangeStore();
-  
+
   const { addOrder } = useOrderHistoryStore();
   const { setPendingOrder } = useSimulationStore();
 
   useEffect(() => {
     fetchPairsForActiveExchange();
   }, [activeExchange, fetchPairsForActiveExchange]);
-  
+
   // Local state for form inputs
   const [orderType, setOrderType] = useState<'Market' | 'Limit'>('Limit');
   const [side, setSide] = useState<'Buy' | 'Sell'>('Buy');
@@ -44,7 +44,7 @@ export default function OrderSimulationForm() {
   const [quantity, setQuantity] = useState('');
   const [delay, setDelay] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
     const numPrice = parseFloat(price);
     const numQuantity = parseFloat(quantity);
 
@@ -61,7 +61,7 @@ export default function OrderSimulationForm() {
       setPendingOrder(null);
     }
   }, [price, quantity, side, orderType, setPendingOrder]);
-  
+
   // Form submission logic 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,17 +86,22 @@ export default function OrderSimulationForm() {
   };
 
   const currentPairList = pairLists[activeExchange.toLowerCase() as keyof typeof pairLists] || [];
-
+  const handleOrderTypeChange = (newType: 'Market' | 'Limit') => {
+    if (newType === 'Market') {
+      setPrice(''); // Clear the price
+    }
+    setOrderType(newType);
+  };
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-1 text-xs md:text-sm">
       <div className="grid grid-cols-2 gap-3">
         <SideButton active={side === 'Buy'} onClick={() => setSide('Buy')} type="Buy" />
         <SideButton active={side === 'Sell'} onClick={() => setSide('Sell')} type="Sell" />
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
 
-        
+
         <FormRow icon={<ArrowRightLeft size={16} />} label="Venue">
           <select value={activeExchange} onChange={(e) => setActiveExchange(e.target.value)} className="form-input w-[60%] ">
             {exchanges.map(ex => <option key={ex} value={ex} >{ex}</option>)}
@@ -114,20 +119,20 @@ export default function OrderSimulationForm() {
 
 
         <FormRow icon={<ChevronsUpDown size={16} />} label="Type">
-            <select value={orderType} onChange={(e) => setOrderType(e.target.value as any)} className="form-input w-[60%]">
-                <option value="Limit">Limit</option>
-                <option value="Market">Market</option>
-            </select>
+          <select value={orderType} onChange={(e) => handleOrderTypeChange(e.target.value as any)} className="form-input w-[60%]">
+            <option value="Limit">Limit</option>
+            <option value="Market">Market</option>
+          </select>
         </FormRow>
 
 
         <FormRow icon={<CircleDollarSign size={16} />} label="Price">
-          <input type="number" placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} disabled={orderType === 'Market'} className="form-input w-[60%] text-left disabled:bg-neutral-800/50 disabled:cursor-not-allowed" />
+          <input type="number" placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} disabled={orderType === 'Market'} className="form-input w-[60%] text-right disabled:bg-neutral-800/50 disabled:cursor-not-allowed" />
         </FormRow>
       </div>
 
       <FormRow icon={<Package size={16} />} label="Quantity">
-        <input type="number" placeholder="0.0000" value={quantity} onChange={(e) => setQuantity(e.target.value)} required className="form-input w-[60%] text-left" />
+        <input type="number" placeholder="0.0000" value={quantity} onChange={(e) => setQuantity(e.target.value)} required className="form-input w-[60%] text-right" />
       </FormRow>
 
       <FormRow icon={<Clock size={16} />} label="Timing">
@@ -142,8 +147,8 @@ export default function OrderSimulationForm() {
 
       <div className="pt-2">
         <button type="submit" className={`w-full p-3 rounded-lg text-white font-semibold text-base flex items-center justify-center gap-2 transition-all duration-300 border hover:shadow-lg ${side === 'Buy' ? 'bg-green-500/10 border-green-500/30 hover:bg-green-500/20 hover:border-green-500/80 hover:shadow-green-500/20' : 'bg-red-500/10 border-red-500/30 hover:bg-red-500/20 hover:border-red-500/80 hover:shadow-red-500/20'}`}>
-            <Send size={16} />
-            Place {side} Order
+          <Send size={16} />
+          Place {side} Order
         </button>
       </div>
     </form>
@@ -161,11 +166,11 @@ const SideButton = ({ active, onClick, type }: { active: boolean, onClick: () =>
   const isActive = active;
   const color = type === 'Buy' ? 'green' : 'red';
   const Icon = type === 'Buy' ? TrendingUp : TrendingDown;
-  
+
   const baseClasses = "p-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold transition-all duration-200 border";
   const activeClasses = `bg-${color}-500/20 border-${color}-500/30 text-${color}-400 shadow-lg shadow-${color}-500/10`;
   const inactiveClasses = "border-white/10 bg-white/5 text-neutral-400 hover:bg-white/10";
-  
+
   return (
     <button type="button" onClick={onClick} className={`${baseClasses} ${isActive ? activeClasses : inactiveClasses}`}>
       <Icon size={16} /> {type}
