@@ -39,7 +39,7 @@ export default function HomePage() {
         titleComponent={
           <div className="text-center">
             <p className="mt-4 text-2xl text-neutral-400">Scroll to simulate and visualize real-time crypto orders.</p>
-            <h1 className="text-4xl font-bold md:text-8xl text-white/80 mb-6">Welcome to GoQuant</h1>
+            <h1 className="text-4xl font-bold md:text-8xl text-white/80 mb-6">Welcome to AtomicBook</h1>
           </div>
         }
       >
