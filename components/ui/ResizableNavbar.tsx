@@ -239,7 +239,7 @@ export const NavbarLogo = () => {
     >
       <RocketIcon className="text-white"/>
       <span className="font-medium text-black text-md dark:text-white">
-        GoQuant
+        AtomicBook
       </span>
     </a>
   );
